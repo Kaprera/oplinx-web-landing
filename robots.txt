@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://oplinx-solutions.com/sitemap.xml

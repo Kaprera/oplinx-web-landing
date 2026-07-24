@@ -41,3 +41,24 @@ Nothing on the page is invented.
 
 The contact form has no backend; it composes a `mailto:` draft. Swap for a real
 endpoint when one exists.
+
+## SEO
+
+`index.html` carries a canonical URL, robots directives, Open Graph and Twitter
+card tags, and a `ProfessionalService` JSON-LD block listing the four service
+practices. Supporting files: `robots.txt`, `sitemap.xml`, `og-image.jpg`
+(1200x849, the portfolio cover) and `logo.png`.
+
+**All absolute URLs assume the site ships at `https://oplinx-solutions.com/`.**
+Change them in `index.html` (canonical, `og:url`, `og:image`, `twitter:image`,
+and the JSON-LD `url`/`logo`/`image`), plus `robots.txt` and `sitemap.xml`.
+
+## Lighthouse
+
+100 / 100 / 100 / 100 (performance, accessibility, best practices, SEO) on both
+the mobile and desktop presets. Mobile LCP 1.0s, CLS 0, TBT 0ms.
+
+Two weight-0 diagnostics — "document request latency" and "minify CSS" — are
+artifacts of serving over `python -m http.server`, which sends no
+`Content-Encoding`. **Serve with gzip or brotli enabled** and both clear; the
+page compresses from 71KB to 18.5KB. Verified against a gzip-enabled server.
