@@ -29,21 +29,15 @@ Brand colours and layout constants are CSS custom properties in `:root` at the
 top of the `<style>` block — `--primary` (navy), `--secondary` (orange),
 `--hero-indent`, and the neutral ramp. Change them in one place.
 
-## ⚠ Placeholder content
+## Content
 
-Real: phone, location, email, Instagram link.
+All copy comes from the OPLINX portfolio deck (`portfolio.pdf`): about, mission,
+vision, core values, the four service practices, industries served, founder's
+insight, success stories, and the "why choose" points. Contact details, brand
+navy (`#002349`), warm stone (`#E4DEDE`), and the logo mark are all taken from
+the same deck — the logo is an inline base64 PNG extracted from page 2.
 
-Still placeholder, tagged inline with `<!-- PH -->` comments:
-
-- Hero headline and subcopy
-- Vision / Mission / Approach
-- All six service card titles and descriptions
-- **The four statistics** (10+ years, 150+ projects, 40+ clients) are invented
-  numbers sitting next to real contact details. Replace or remove them before
-  this goes public.
-- LinkedIn link (`#`)
-- Commercial registration line in the footer
-- Brand colours are the reference site's, not OPLINX's
+Nothing on the page is invented.
 
 The contact form has no backend; it composes a `mailto:` draft. Swap for a real
 endpoint when one exists.
