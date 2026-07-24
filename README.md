@@ -26,8 +26,8 @@ Open `index.html` in a browser. That's all.
 ## Design tokens
 
 Brand colours and layout constants are CSS custom properties in `:root` at the
-top of the `<style>` block — `--primary` (navy), `--secondary` (orange),
-`--hero-indent`, and the neutral ramp. Change them in one place.
+top of the `<style>` block — `--navy`, `--stone`, `--accent`, `--hero-indent`,
+and the neutral ramp. Change them in one place.
 
 ## Content
 
