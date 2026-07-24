@@ -1,0 +1,790 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OPLINX SOLUTIONS</title>
+<meta name="description" content="OPLINX SOLUTIONS — integrated solutions and services, based in Beirut, Lebanon.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Crect%20width='100'%20height='100'%20rx='20'%20fill='%23004885'/%3E%3Ccircle%20cx='50'%20cy='50'%20r='22'%20fill='none'%20stroke='%23F26524'%20stroke-width='11'/%3E%3C/svg%3E">
+
+<style>
+/* ==========================================================================
+   1. Tokens
+   ========================================================================== */
+:root{
+  --primary:#004885;        /* PH — brand navy */
+  --primary-deep:#00365f;
+  --secondary:#F26524;      /* PH — brand orange */
+  --secondary-soft:#ff8a4d;
+  --neutral-000:#ffffff;
+  --neutral-050:#F8F8F8;
+  --neutral-100:#F3F3F3;
+  --neutral-200:#F1F1F1;
+  --neutral-300:#d9d9d9;
+  --body:#707070;
+  --ink:#444444;
+
+  --shell:min(1280px, 100% - 2.5rem);
+  --nav-h:5.5rem;
+  --radius:4px;
+  --hero-indent:clamp(0rem, 1.6vw, 2rem);  /* hero copy offset from the shell edge */
+
+  --font-latin:"Inter","Helvetica Neue",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --font-arabic:"Noto Kufi Arabic","Tajawal","Geeza Pro","Segoe UI",sans-serif;
+  --font:var(--font-latin);
+
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+html[dir="rtl"]{ --font:var(--font-arabic); }
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; scroll-padding-top:var(--nav-h); }
+@media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} }
+
+body{
+  margin:0;
+  font-family:var(--font);
+  color:var(--body);
+  background:var(--neutral-000);
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+::selection{ background:var(--secondary); color:#fff; }
+
+h1,h2,h3,h4{ color:var(--primary); font-weight:800; line-height:1.15; margin:0; letter-spacing:-.02em; }
+html[dir="rtl"] h1,html[dir="rtl"] h2,html[dir="rtl"] h3,html[dir="rtl"] h4{ letter-spacing:0; line-height:1.35; }
+p{ margin:0; }
+a{ color:inherit; text-decoration:none; }
+img,svg{ max-width:100%; display:block; }
+button{ font:inherit; color:inherit; }
+
+.shell{ width:var(--shell); margin-inline:auto; }
+
+/* Visually hidden, still read by screen readers and by the outline algorithm */
+.sr-only{
+  position:absolute; width:1px; height:1px; margin:-1px; padding:0;
+  overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0;
+}
+
+/* Fluid type scale */
+.t-display{ font-size:clamp(2.1rem, 6.2vw, 5.25rem); }
+.t-h2{ font-size:clamp(1.75rem, 4.2vw, 3.5rem); }
+.t-h3{ font-size:clamp(1.15rem, 1.9vw, 1.6rem); }
+.t-lead{ font-size:clamp(1rem, 1.55vw, 1.3rem); line-height:1.75; }
+.t-body{ font-size:clamp(.94rem, 1.1vw, 1.05rem); }
+
+/* Reference signature: heading with a short accent bar underneath */
+.underlined{ position:relative; display:inline-block; padding-bottom:.55rem; }
+.underlined::after{
+  content:""; position:absolute; inset-inline-start:0; bottom:0;
+  width:clamp(3rem, 22%, 6.5rem); height:6px; background:var(--secondary);
+}
+.on-dark .underlined::after{ background:var(--secondary); }
+
+/* Scroll reveal */
+.reveal{ opacity:0; transform:translateY(26px); transition:opacity .7s var(--ease), transform .7s var(--ease); }
+.reveal.in{ opacity:1; transform:none; }
+@media (prefers-reduced-motion:reduce){ .reveal{opacity:1;transform:none;transition:none} }
+
+/* ==========================================================================
+   2. Navigation
+   ========================================================================== */
+.nav{
+  position:fixed; inset-inline:0; top:0; z-index:60; height:var(--nav-h);
+  display:flex; align-items:center;
+  transition:background .35s var(--ease), box-shadow .35s var(--ease);
+}
+.nav.stuck{ background:rgba(255,255,255,.94); backdrop-filter:blur(14px); box-shadow:0 1px 0 rgba(0,0,0,.07); }
+.nav__inner{ display:flex; align-items:center; justify-content:space-between; gap:1rem; width:var(--shell); margin-inline:auto; }
+
+.logo{ display:inline-flex; align-items:center; gap:.6rem; }
+.logo__mark{ width:34px; height:34px; flex:none; }
+.logo__text{ font-weight:800; font-size:1.12rem; letter-spacing:.12em; color:var(--primary); line-height:1; }
+.logo__text small{ display:block; font-size:.5rem; letter-spacing:.34em; color:var(--secondary); font-weight:700; margin-top:.28rem; }
+html[dir="rtl"] .logo__text{ letter-spacing:.06em; }
+
+.nav__links{ display:flex; align-items:center; gap:clamp(1.2rem,2.6vw,2.75rem); }
+.nav__links a{
+  position:relative; font-size:.95rem; font-weight:600; color:var(--primary);
+  padding-block:.4rem; transition:color .2s var(--ease); white-space:nowrap;
+}
+.nav__links a::before{
+  content:""; position:absolute; inset-inline-start:0; bottom:0; width:100%; height:2px;
+  background:var(--secondary); transform:scaleX(0); transform-origin:inline-start;
+  transition:transform .25s var(--ease);
+}
+.nav__links a:hover{ color:var(--secondary); }
+.nav__links a:hover::before{ transform:scaleX(1); }
+
+.nav__actions{ display:flex; align-items:center; gap:.7rem; }
+
+.lang{
+  border:1.5px solid var(--primary); background:transparent; color:var(--primary);
+  font-weight:700; font-size:.82rem; padding:.5rem .95rem; border-radius:var(--radius);
+  cursor:pointer; transition:background .22s var(--ease), color .22s var(--ease);
+  min-width:5.5rem;
+}
+.lang:hover{ background:var(--primary); color:#fff; }
+
+.burger{ display:none; border:0; background:transparent; padding:.4rem; cursor:pointer; }
+.burger span{ display:block; width:24px; height:2px; background:var(--primary); border-radius:2px; }
+.burger span+span{ margin-top:6px; }
+
+@media (max-width:900px){
+  .burger{ display:block; }
+  .nav__links{
+    position:fixed; inset:var(--nav-h) 0 auto 0; flex-direction:column; align-items:stretch;
+    gap:0; background:#fff; padding:.5rem 0 1.25rem; box-shadow:0 18px 34px rgba(0,0,0,.1);
+    transform:translateY(-12px); opacity:0; pointer-events:none; transition:.28s var(--ease);
+  }
+  .nav__links.open{ transform:none; opacity:1; pointer-events:auto; }
+  .nav__links a{ padding:.95rem var(--pad,1.25rem); border-bottom:1px solid var(--neutral-200); font-size:1.02rem; }
+  .nav__links a::before{ display:none; }
+}
+
+/* ==========================================================================
+   3. Hero
+   ========================================================================== */
+#hero{
+  position:relative; min-height:min(100svh, 860px); display:flex; align-items:center;
+  padding-block:calc(var(--nav-h) + 3rem) 4rem; overflow:hidden;
+  background:
+    radial-gradient(90rem 52rem at 82% -10%, #eaf2f9 0%, rgba(234,242,249,0) 62%),
+    linear-gradient(180deg,#ffffff 0%, var(--neutral-100) 100%);
+}
+.hero__art{
+  position:absolute; inset-block:0; inset-inline-end:-6%; width:min(58%, 780px);
+  pointer-events:none; z-index:0; opacity:.95;
+}
+html[dir="rtl"] .hero__art{ transform:scaleX(-1); }
+@media (max-width:820px){ .hero__art{ inset-inline-end:-22%; width:105%; opacity:.4; } }
+
+/* Keeps the full shell width so .shell's auto margins centre the *container*,
+   not the text. The copy itself is constrained by its own children below and
+   sits flush to the container's start edge, in line with the nav logo.
+   --hero-indent adds the small offset from that edge; tune it in one place. */
+.hero__body{
+  position:relative; z-index:1;
+  text-align:start;
+  padding-inline-start:var(--hero-indent);
+}
+.hero__eyebrow{
+  display:inline-flex; align-items:center; gap:.6rem; font-size:.78rem; font-weight:700;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--secondary); margin-bottom:1.4rem;
+}
+html[dir="rtl"] .hero__eyebrow{ letter-spacing:.05em; text-transform:none; }
+.hero__eyebrow::before{ content:""; width:2.2rem; height:2px; background:var(--secondary); }
+
+#hero h1{ margin-bottom:1.5rem; max-width:20ch; }
+#hero h1 em{ font-style:normal; color:var(--secondary); }
+.hero__sub{ max-width:52ch; margin-bottom:2.4rem; }
+
+/* On wide screens cap the copy as a share of the container so it never runs
+   under the artwork; ch-based caps keep it readable on narrow screens. */
+@media (min-width:1000px){
+  #hero h1{ max-width:min(20ch, 62%); }
+  .hero__sub{ max-width:min(52ch, 48%); }
+}
+
+.cta-row{ display:flex; flex-wrap:wrap; gap:.85rem; }
+.btn{
+  display:inline-flex; align-items:center; gap:.6rem; padding:.95rem 1.9rem;
+  border-radius:var(--radius); font-weight:700; font-size:.98rem; cursor:pointer;
+  border:1.5px solid transparent; transition:.25s var(--ease);
+}
+.btn--solid{ background:var(--secondary); color:#fff; }
+.btn--solid:hover{ background:#d9531a; transform:translateY(-2px); }
+.btn--ghost{ border-color:var(--primary); color:var(--primary); }
+.btn--ghost:hover{ background:var(--primary); color:#fff; transform:translateY(-2px); }
+.btn svg{ width:1em; height:1em; flex:none; }
+html[dir="rtl"] .btn svg{ transform:scaleX(-1); }
+
+/* ==========================================================================
+   4. About
+   ========================================================================== */
+#about{ padding-block:clamp(4.5rem,9vw,8.5rem); background:#fff; }
+.about__grid{ display:grid; gap:clamp(2.5rem,5vw,4.5rem); grid-template-columns:1fr; }
+@media (min-width:960px){ .about__grid{ grid-template-columns:.85fr 1.15fr; align-items:start; } }
+
+.about__pillars{ display:grid; gap:2.4rem; }
+.pillar h3{ margin-bottom:.7rem; }
+.pillar__rule{ width:min(22rem,100%); height:2px; background:var(--primary); opacity:.18; margin-top:2.2rem; }
+.pillar:last-child .pillar__rule{ display:none; }
+
+/* ==========================================================================
+   5. Services (dark navy band — reference signature)
+   ========================================================================== */
+#services{
+  position:relative; padding-block:clamp(4.5rem,9vw,8rem); overflow:hidden;
+  background:linear-gradient(150deg, var(--primary) 0%, var(--primary-deep) 100%);
+  color:rgba(255,255,255,.82);
+}
+#services h2,#services h3{ color:#fff; }
+.services__glow{
+  position:absolute; inset-block-start:-30%; inset-inline-end:-12%;
+  width:46rem; aspect-ratio:1; border-radius:50%; pointer-events:none;
+  background:radial-gradient(circle, rgba(242,101,36,.28) 0%, rgba(242,101,36,0) 65%);
+}
+.services__head{ max-width:56ch; margin-bottom:clamp(2.5rem,5vw,4rem); position:relative; }
+.services__head p{ margin-top:1.3rem; }
+
+.cards{ display:grid; gap:1.25rem; grid-template-columns:repeat(auto-fit,minmax(min(100%,17.5rem),1fr)); position:relative; }
+.card{
+  background:rgba(255,255,255,.055); border:1px solid rgba(255,255,255,.13);
+  border-radius:var(--radius); padding:2rem 1.75rem 2.1rem;
+  transition:.3s var(--ease); position:relative; overflow:hidden;
+}
+.card::after{
+  content:""; position:absolute; inset-block-end:0; inset-inline-start:0;
+  width:100%; height:3px; background:var(--secondary);
+  transform:scaleX(0); transform-origin:inline-start; transition:transform .35s var(--ease);
+}
+.card:hover{ background:rgba(255,255,255,.1); transform:translateY(-5px); }
+.card:hover::after{ transform:scaleX(1); }
+.card__num{
+  font-size:.75rem; font-weight:800; letter-spacing:.18em; color:var(--secondary-soft);
+  margin-bottom:1.1rem; display:block;
+}
+.card h3{ font-size:1.22rem; margin-bottom:.7rem; }
+.card p{ font-size:.95rem; line-height:1.72; }
+
+/* ==========================================================================
+   6. Stats
+   ========================================================================== */
+#stats{ background:var(--neutral-100); padding-block:clamp(3rem,6vw,5rem); }
+.stats__grid{ display:grid; gap:2rem 1.5rem; grid-template-columns:repeat(auto-fit,minmax(10rem,1fr)); text-align:center; }
+.stat__value{ font-size:clamp(2.2rem,4.6vw,3.6rem); font-weight:800; color:var(--primary); line-height:1; }
+.stat__value span{ color:var(--secondary); }
+.stat__label{ margin-top:.7rem; font-size:.9rem; font-weight:600; color:var(--ink); }
+
+/* ==========================================================================
+   7. Contact
+   ========================================================================== */
+#contact{ padding-block:clamp(4.5rem,9vw,8rem); background:#fff; }
+.contact__grid{ display:grid; gap:clamp(2.5rem,5vw,4.5rem); grid-template-columns:1fr; }
+@media (min-width:960px){ .contact__grid{ grid-template-columns:1fr 1fr; align-items:start; } }
+
+.contact__list{ display:grid; gap:1.6rem; margin-top:2.6rem; }
+.cinfo{ display:flex; gap:1rem; align-items:flex-start; }
+.cinfo__icon{
+  flex:none; width:2.75rem; height:2.75rem; border-radius:var(--radius);
+  background:var(--neutral-100); color:var(--primary);
+  display:grid; place-items:center;
+}
+.cinfo__icon svg{ width:1.15rem; height:1.15rem; }
+.cinfo__label{ font-size:.74rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--secondary); }
+html[dir="rtl"] .cinfo__label{ letter-spacing:.04em; text-transform:none; }
+.cinfo__value{ font-size:1.02rem; font-weight:600; color:var(--primary); direction:ltr; text-align:start; overflow-wrap:anywhere; }
+html[dir="rtl"] .cinfo__value.is-text{ direction:rtl; }
+
+.form{ display:grid; gap:1rem; background:var(--neutral-050); border:1px solid var(--neutral-200); border-radius:var(--radius); padding:clamp(1.5rem,3vw,2.25rem); }
+.field{ display:grid; gap:.45rem; }
+.field label{ font-size:.82rem; font-weight:700; color:var(--primary); }
+.field input,.field textarea{
+  font:inherit; font-size:.98rem; color:var(--ink); background:#fff;
+  border:1px solid var(--neutral-300); border-radius:var(--radius);
+  padding:.8rem .95rem; width:100%; transition:border-color .2s var(--ease), box-shadow .2s var(--ease);
+}
+.field input:focus,.field textarea:focus{
+  outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(0,72,133,.12);
+}
+.field textarea{ resize:vertical; min-height:8rem; }
+.form .btn{ justify-content:center; }
+.form__note{ font-size:.82rem; color:var(--body); }
+.form__note[hidden]{ display:none; }
+
+/* ==========================================================================
+   8. Footer
+   ========================================================================== */
+footer{ background:var(--neutral-100); padding-block:clamp(3rem,6vw,4.5rem) 0; color:var(--ink); }
+.foot__grid{ display:grid; gap:2.5rem; grid-template-columns:1fr; padding-bottom:3rem; }
+@media (min-width:760px){ .foot__grid{ grid-template-columns:1.6fr 1fr 1.2fr; } }
+.foot__h{ font-size:.98rem; margin-bottom:1.1rem; }
+.foot__rule{ width:2.6rem; height:2px; background:var(--secondary); margin-bottom:1.1rem; }
+.foot ul{ list-style:none; margin:0; padding:0; display:grid; gap:.65rem; font-size:.94rem; overflow-wrap:anywhere; }
+.foot a:hover{ color:var(--secondary); }
+.foot__tag{ font-size:.94rem; max-width:38ch; margin-top:1rem; }
+
+.social{ display:flex; gap:.65rem; margin-top:1.4rem; }
+.social a{
+  width:2.4rem; height:2.4rem; border-radius:var(--radius); display:grid; place-items:center;
+  background:#fff; border:1px solid var(--neutral-300); color:var(--primary); transition:.25s var(--ease);
+}
+.social a:hover{ background:var(--primary); color:#fff; border-color:var(--primary); transform:translateY(-2px); }
+.social svg{ width:1.05rem; height:1.05rem; }
+
+.foot__bar{
+  border-top:1px solid var(--neutral-300); padding-block:1.5rem;
+  display:flex; flex-wrap:wrap; gap:.5rem 1.5rem; justify-content:space-between;
+  font-size:.85rem;
+}
+.credit{ margin-inline-start:auto; }
+.credit b{ font-weight:800; color:var(--primary); }
+</style>
+</head>
+
+<body>
+
+<!-- ======================= NAV ======================= -->
+<header class="nav" id="nav">
+  <div class="nav__inner">
+    <a class="logo" href="#hero" aria-label="OPLINX SOLUTIONS">
+      <svg class="logo__mark" viewBox="0 0 100 100" aria-hidden="true">
+        <rect width="100" height="100" rx="20" fill="var(--primary)"/>
+        <circle cx="50" cy="50" r="22" fill="none" stroke="var(--secondary)" stroke-width="11"/>
+        <path d="M50 6v22M50 72v22" stroke="#fff" stroke-width="9" stroke-linecap="round"/>
+      </svg>
+      <span class="logo__text">OPLINX<small data-en="SOLUTIONS" data-ar="للحلول">SOLUTIONS</small></span>
+    </a>
+
+    <nav class="nav__links" id="navLinks">
+      <a href="#about"    data-en="About"    data-ar="من نحن">About</a>
+      <a href="#services" data-en="Services" data-ar="خدماتنا">Services</a>
+      <a href="#stats"    data-en="Why Us"   data-ar="لماذا نحن">Why Us</a>
+      <a href="#contact"  data-en="Contact"  data-ar="تواصل معنا">Contact</a>
+    </nav>
+
+    <div class="nav__actions">
+      <button class="lang" id="langBtn" type="button">العربية</button>
+      <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ======================= HERO ======================= -->
+<section id="hero">
+  <svg class="hero__art" viewBox="0 0 700 800" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%"  stop-color="#004885" stop-opacity=".14"/>
+        <stop offset="100%" stop-color="#004885" stop-opacity="0"/>
+      </linearGradient>
+      <linearGradient id="g2" x1="0" y1="1" x2="1" y2="0">
+        <stop offset="0%"  stop-color="#F26524" stop-opacity=".22"/>
+        <stop offset="100%" stop-color="#F26524" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <circle cx="430" cy="330" r="290" fill="url(#g1)"/>
+    <circle cx="430" cy="330" r="215" fill="none" stroke="#004885" stroke-opacity=".16" stroke-width="1.5"/>
+    <circle cx="430" cy="330" r="148" fill="none" stroke="#004885" stroke-opacity=".22" stroke-width="1.5"/>
+    <circle cx="430" cy="330" r="82"  fill="url(#g2)"/>
+    <circle cx="430" cy="330" r="82"  fill="none" stroke="#F26524" stroke-opacity=".5" stroke-width="2"/>
+    <path d="M140 640h520" stroke="#004885" stroke-opacity=".14" stroke-width="1.5"/>
+    <path d="M215 700h445" stroke="#004885" stroke-opacity=".1"  stroke-width="1.5"/>
+    <g fill="#F26524" fill-opacity=".55">
+      <circle cx="430" cy="115" r="7"/><circle cx="645" cy="330" r="7"/><circle cx="430" cy="545" r="7"/>
+    </g>
+    <g fill="#004885" fill-opacity=".35">
+      <circle cx="278" cy="178" r="5"/><circle cx="582" cy="178" r="5"/><circle cx="278" cy="482" r="5"/>
+    </g>
+  </svg>
+
+  <div class="shell hero__body">
+    <!-- PH: eyebrow -->
+    <span class="hero__eyebrow" data-en="Beirut · Lebanon" data-ar="بيروت · لبنان">Beirut · Lebanon</span>
+
+    <!-- PH: headline -->
+    <h1 class="t-display"
+        data-en="Integrated solutions that move your <em>operations</em> forward"
+        data-ar="حلول متكاملة تدفع <em>أعمالك</em> إلى الأمام">
+      Integrated solutions that move your <em>operations</em> forward
+    </h1>
+
+    <!-- PH: sub-headline -->
+    <p class="hero__sub t-lead"
+       data-en="OPLINX SOLUTIONS delivers dependable services built around the needs of the region — pairing technical depth with execution you can plan on."
+       data-ar="تقدّم أوبلينكس للحلول خدمات موثوقة مصمّمة لتلبية احتياجات السوق المحلي والإقليمي، بخبرة تقنية عميقة وتنفيذ يمكن الاعتماد عليه.">
+      OPLINX SOLUTIONS delivers dependable services built around the needs of the region — pairing technical depth with execution you can plan on.
+    </p>
+
+    <div class="cta-row">
+      <a class="btn btn--solid" href="#contact" data-en="Get in touch" data-ar="تواصل معنا">Get in touch</a>
+      <a class="btn btn--ghost" href="#services" data-en="Our services" data-ar="خدماتنا">Our services</a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= ABOUT ======================= -->
+<section id="about">
+  <div class="shell about__grid">
+    <div class="reveal">
+      <h2 class="t-h2 underlined" data-en="About Us" data-ar="من نحن">About Us</h2>
+    </div>
+
+    <div class="about__pillars">
+      <div class="pillar reveal">
+        <h3 class="t-h3" data-en="Our Vision" data-ar="رؤيتنا">Our Vision</h3>
+        <!-- PH: vision copy -->
+        <p class="t-body"
+           data-en="To lead in delivering integrated solutions, and to build a sustainable model of service excellence that raises the standard of service across the region."
+           data-ar="الريادة في تقديم الحلول المتكاملة، وبناء نموذج مستدام للتميّز في الخدمة يرتقي بمعايير الخدمة على مستوى المنطقة.">
+          To lead in delivering integrated solutions, and to build a sustainable model of service excellence that raises the standard of service across the region.
+        </p>
+        <div class="pillar__rule"></div>
+      </div>
+
+      <div class="pillar reveal">
+        <h3 class="t-h3" data-en="Our Mission" data-ar="رسالتنا">Our Mission</h3>
+        <!-- PH: mission copy -->
+        <p class="t-body"
+           data-en="To provide the highest quality of service through considered professional capability, clear communication, and a standard of delivery that earns our clients' long-term trust."
+           data-ar="تقديم أعلى مستويات الجودة في الخدمة من خلال كفاءة مهنية مدروسة، وتواصل واضح، ومعيار تنفيذ يكسب ثقة عملائنا على المدى الطويل.">
+          To provide the highest quality of service through considered professional capability, clear communication, and a standard of delivery that earns our clients' long-term trust.
+        </p>
+        <div class="pillar__rule"></div>
+      </div>
+
+      <div class="pillar reveal">
+        <h3 class="t-h3" data-en="Our Approach" data-ar="منهجنا">Our Approach</h3>
+        <!-- PH: approach copy -->
+        <p class="t-body"
+           data-en="We start from the operational reality of each client, scope the work honestly, and stay accountable through delivery — no hand-offs that leave gaps."
+           data-ar="نبدأ من الواقع التشغيلي لكل عميل، ونحدّد نطاق العمل بوضوح وصدق، ونبقى مسؤولين حتى اكتمال التنفيذ دون فجوات.">
+          We start from the operational reality of each client, scope the work honestly, and stay accountable through delivery — no hand-offs that leave gaps.
+        </p>
+        <div class="pillar__rule"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= SERVICES ======================= -->
+<section id="services" class="on-dark">
+  <div class="services__glow"></div>
+  <div class="shell">
+    <div class="services__head reveal">
+      <h2 class="t-h2 underlined" data-en="Our Services" data-ar="خدماتنا">Our Services</h2>
+      <!-- PH: services intro -->
+      <p class="t-lead"
+         data-en="A connected set of capabilities, offered individually or as one managed engagement."
+         data-ar="مجموعة مترابطة من القدرات، تُقدَّم بشكل منفصل أو ضمن عقد إدارة واحد.">
+        A connected set of capabilities, offered individually or as one managed engagement.
+      </p>
+    </div>
+
+    <!-- PH: all six service cards — replace titles and descriptions -->
+    <div class="cards">
+      <article class="card reveal">
+        <span class="card__num">01</span>
+        <h3 data-en="Operations Support" data-ar="دعم العمليات">Operations Support</h3>
+        <p data-en="Day-to-day operational cover that keeps delivery steady, with defined response times and clear escalation paths."
+           data-ar="تغطية تشغيلية يومية تحافظ على انتظام الأداء، بأزمنة استجابة محددة ومسارات تصعيد واضحة.">
+          Day-to-day operational cover that keeps delivery steady, with defined response times and clear escalation paths.
+        </p>
+      </article>
+
+      <article class="card reveal">
+        <span class="card__num">02</span>
+        <h3 data-en="Technical Consulting" data-ar="الاستشارات التقنية">Technical Consulting</h3>
+        <p data-en="Assessment, planning and specification work that turns an unclear requirement into a scope you can budget and build against."
+           data-ar="أعمال التقييم والتخطيط والتوصيف التي تحوّل المتطلبات غير الواضحة إلى نطاق عمل قابل للتقدير والتنفيذ.">
+          Assessment, planning and specification work that turns an unclear requirement into a scope you can budget and build against.
+        </p>
+      </article>
+
+      <article class="card reveal">
+        <span class="card__num">03</span>
+        <h3 data-en="Project Management" data-ar="إدارة المشاريع">Project Management</h3>
+        <p data-en="End-to-end coordination across vendors, timelines and budgets, with reporting that reflects real status rather than optimistic status."
+           data-ar="تنسيق شامل بين الموردين والجداول الزمنية والميزانيات، مع تقارير تعكس الحالة الفعلية لا المتفائلة.">
+          End-to-end coordination across vendors, timelines and budgets, with reporting that reflects real status rather than optimistic status.
+        </p>
+      </article>
+
+      <article class="card reveal">
+        <span class="card__num">04</span>
+        <h3 data-en="Maintenance &amp; Facilities" data-ar="الصيانة والمرافق">Maintenance &amp; Facilities</h3>
+        <p data-en="Preventive and corrective programmes that extend asset life and reduce unplanned downtime across your sites."
+           data-ar="برامج صيانة وقائية وتصحيحية تطيل عمر الأصول وتقلّل التوقفات غير المخططة في مواقعكم.">
+          Preventive and corrective programmes that extend asset life and reduce unplanned downtime across your sites.
+        </p>
+      </article>
+
+      <article class="card reveal">
+        <span class="card__num">05</span>
+        <h3 data-en="Supply &amp; Procurement" data-ar="التوريد والمشتريات">Supply &amp; Procurement</h3>
+        <p data-en="Sourcing, vetting and delivery of the materials and equipment your work depends on, at terms that hold up under review."
+           data-ar="توريد وفحص وتسليم المواد والمعدات التي يعتمد عليها عملكم، بشروط تصمد أمام المراجعة.">
+          Sourcing, vetting and delivery of the materials and equipment your work depends on, at terms that hold up under review.
+        </p>
+      </article>
+
+      <article class="card reveal">
+        <span class="card__num">06</span>
+        <h3 data-en="Digital Systems" data-ar="الأنظمة الرقمية">Digital Systems</h3>
+        <p data-en="Implementation and integration of the platforms that carry your operation — set up properly, documented, and handed over trained."
+           data-ar="تنفيذ وتكامل المنصات التي تدير عملياتكم، بإعداد سليم وتوثيق كامل وتسليم مصحوب بالتدريب.">
+          Implementation and integration of the platforms that carry your operation — set up properly, documented, and handed over trained.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= STATS ======================= -->
+<section id="stats" aria-labelledby="stats-h">
+  <!-- PH: all four figures are invented -->
+  <h2 id="stats-h" class="sr-only" data-en="Why Us" data-ar="لماذا نحن">Why Us</h2>
+  <div class="shell stats__grid">
+    <div class="reveal">
+      <div class="stat__value">10<span>+</span></div>
+      <div class="stat__label" data-en="Years of experience" data-ar="سنوات من الخبرة">Years of experience</div>
+    </div>
+    <div class="reveal">
+      <div class="stat__value">150<span>+</span></div>
+      <div class="stat__label" data-en="Projects delivered" data-ar="مشروع منجز">Projects delivered</div>
+    </div>
+    <div class="reveal">
+      <div class="stat__value">40<span>+</span></div>
+      <div class="stat__label" data-en="Clients served" data-ar="عميل">Clients served</div>
+    </div>
+    <div class="reveal">
+      <div class="stat__value">24<span>/7</span></div>
+      <div class="stat__label" data-en="Operational support" data-ar="دعم تشغيلي">Operational support</div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= CONTACT ======================= -->
+<section id="contact">
+  <div class="shell contact__grid">
+    <div class="reveal">
+      <h2 class="t-h2 underlined" data-en="Contact Us" data-ar="تواصل معنا">Contact Us</h2>
+      <p class="t-lead" style="margin-top:1.4rem;"
+         data-en="Tell us what you need and we'll come back with a straight answer on whether we're the right fit."
+         data-ar="أخبرنا بما تحتاجه وسنعود إليك بإجابة صريحة حول مدى ملاءمتنا لمشروعك.">
+        Tell us what you need and we'll come back with a straight answer on whether we're the right fit.
+      </p>
+
+      <!-- PH: every contact detail below -->
+      <div class="contact__list">
+        <div class="cinfo">
+          <div class="cinfo__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </div>
+          <div>
+            <div class="cinfo__label" data-en="Phone" data-ar="الهاتف">Phone</div>
+            <a class="cinfo__value" href="tel:+96176021020">+961 76 021 020</a>
+          </div>
+        </div>
+
+        <div class="cinfo">
+          <div class="cinfo__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          </div>
+          <div>
+            <div class="cinfo__label" data-en="Email" data-ar="البريد الإلكتروني">Email</div>
+            <a class="cinfo__value" href="mailto:info@oplinx-solutions.com">info@oplinx-solutions.com</a>
+          </div>
+        </div>
+
+        <div class="cinfo">
+          <div class="cinfo__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <div class="cinfo__label" data-en="Office" data-ar="المقر">Office</div>
+            <div class="cinfo__value is-text" data-en="Beirut, Lebanon" data-ar="بيروت، لبنان">Beirut, Lebanon</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <form class="form reveal" id="contactForm" novalidate>
+      <div class="field">
+        <label for="f-name" data-en="Full name" data-ar="الاسم الكامل">Full name</label>
+        <input id="f-name" name="name" type="text" required autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="f-email" data-en="Email address" data-ar="البريد الإلكتروني">Email address</label>
+        <input id="f-email" name="email" type="email" required autocomplete="email">
+      </div>
+      <div class="field">
+        <label for="f-subject" data-en="Subject" data-ar="الموضوع">Subject</label>
+        <input id="f-subject" name="subject" type="text">
+      </div>
+      <div class="field">
+        <label for="f-msg" data-en="How can we help?" data-ar="كيف يمكننا مساعدتك؟">How can we help?</label>
+        <textarea id="f-msg" name="message" required></textarea>
+      </div>
+      <button class="btn btn--solid" type="submit" data-en="Send message" data-ar="إرسال الرسالة">Send message</button>
+      <!-- NOTE: no backend wired up — this opens the visitor's mail client. -->
+      <p class="form__note" id="formNote" hidden
+         data-en="Opening your email app…" data-ar="جارٍ فتح تطبيق البريد لديك…">Opening your email app…</p>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<!-- ======================= FOOTER ======================= -->
+<footer class="foot">
+  <div class="shell">
+    <div class="foot__grid">
+      <div>
+        <a class="logo" href="#hero">
+          <svg class="logo__mark" viewBox="0 0 100 100" aria-hidden="true">
+            <rect width="100" height="100" rx="20" fill="var(--primary)"/>
+            <circle cx="50" cy="50" r="22" fill="none" stroke="var(--secondary)" stroke-width="11"/>
+            <path d="M50 6v22M50 72v22" stroke="#fff" stroke-width="9" stroke-linecap="round"/>
+          </svg>
+          <span class="logo__text">OPLINX<small data-en="SOLUTIONS" data-ar="للحلول">SOLUTIONS</small></span>
+        </a>
+        <!-- PH: footer tagline -->
+        <p class="foot__tag"
+           data-en="Integrated solutions and services, delivered to a standard our clients can plan around."
+           data-ar="حلول وخدمات متكاملة تُنفَّذ بمعيار يمكن لعملائنا الاعتماد عليه في التخطيط.">
+          Integrated solutions and services, delivered to a standard our clients can plan around.
+        </p>
+
+        <!-- PH: add real social links; the Instagram URL below is the real account -->
+        <div class="social">
+          <a href="https://www.instagram.com/oplinx_solutions" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a href="#" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-11h4v1.5A6 6 0 0 1 16 8z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+          <a href="mailto:info@oplinx-solutions.com" aria-label="Email">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="foot__h" data-en="Links" data-ar="روابط">Links</h3>
+        <div class="foot__rule"></div>
+        <ul>
+          <li><a href="#about"    data-en="About Us"  data-ar="من نحن">About Us</a></li>
+          <li><a href="#services" data-en="Services"  data-ar="خدماتنا">Services</a></li>
+          <li><a href="#stats"    data-en="Why Us"    data-ar="لماذا نحن">Why Us</a></li>
+          <li><a href="#contact"  data-en="Contact"   data-ar="تواصل معنا">Contact</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="foot__h" data-en="Contact" data-ar="للتواصل">Contact</h3>
+        <div class="foot__rule"></div>
+        <ul>
+          <li><a href="tel:+96176021020" dir="ltr" style="display:inline-block">+961 76 021 020</a></li>
+          <li><a href="mailto:info@oplinx-solutions.com">info@oplinx-solutions.com</a></li>
+          <li data-en="Beirut, Lebanon" data-ar="بيروت، لبنان">Beirut, Lebanon</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="foot__bar">
+      <span data-en="© 2026 OPLINX SOLUTIONS. All rights reserved."
+            data-ar="© 2026 أوبلينكس للحلول. جميع الحقوق محفوظة.">© 2026 OPLINX SOLUTIONS. All rights reserved.</span>
+      <span data-en="Commercial Registration: —" data-ar="السجل التجاري: —">Commercial Registration: —</span><!-- PH -->
+      <span class="credit"
+            data-en="Designed &amp; developed by &lt;b&gt;Kaprera&lt;/b&gt;"
+            data-ar="تصميم وتطوير &lt;b&gt;كابريرا&lt;/b&gt;">Designed &amp; developed by <b>Kaprera</b></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- Language toggle (EN ⇄ AR + RTL) ---------- */
+  var html    = document.documentElement;
+  var langBtn = document.getElementById("langBtn");
+  var STORE   = "oplinx-lang";
+
+  function applyLang(lang){
+    var isAr = lang === "ar";
+    html.setAttribute("lang", isAr ? "ar" : "en");
+    html.setAttribute("dir",  isAr ? "rtl" : "ltr");
+    langBtn.textContent = isAr ? "English" : "العربية";
+
+    document.querySelectorAll("[data-en][data-ar]").forEach(function(el){
+      var val = el.getAttribute(isAr ? "data-ar" : "data-en");
+      if (val === null) return;
+      // A few strings carry inline <em> emphasis, so write HTML rather than text.
+      el.innerHTML = val;
+    });
+
+    document.title = isAr ? "أوبلينكس للحلول" : "OPLINX SOLUTIONS";
+    try { localStorage.setItem(STORE, lang); } catch(e){}
+  }
+
+  var saved = null;
+  try { saved = localStorage.getItem(STORE); } catch(e){}
+  if (saved === "ar") applyLang("ar");
+
+  langBtn.addEventListener("click", function(){
+    applyLang(html.getAttribute("dir") === "rtl" ? "en" : "ar");
+  });
+
+  /* ---------- Sticky nav background ---------- */
+  var nav = document.getElementById("nav");
+  function onScroll(){ nav.classList.toggle("stuck", window.scrollY > 40); }
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive:true });
+
+  /* ---------- Mobile menu ---------- */
+  var burger = document.getElementById("burger");
+  var links  = document.getElementById("navLinks");
+  burger.addEventListener("click", function(){
+    var open = links.classList.toggle("open");
+    burger.setAttribute("aria-expanded", String(open));
+  });
+  links.addEventListener("click", function(e){
+    if (e.target.tagName === "A"){
+      links.classList.remove("open");
+      burger.setAttribute("aria-expanded", "false");
+    }
+  });
+
+  /* ---------- Scroll reveal ---------- */
+  var items = document.querySelectorAll(".reveal");
+  if (!("IntersectionObserver" in window)){
+    items.forEach(function(el){ el.classList.add("in"); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("in");
+        io.unobserve(entry.target);
+      });
+    }, { threshold:0.12, rootMargin:"0px 0px -8% 0px" });
+
+    items.forEach(function(el, i){
+      el.style.transitionDelay = (i % 3) * 90 + "ms";
+      io.observe(el);
+    });
+  }
+
+  /* ---------- Contact form ----------
+     No backend is wired up. This composes a mailto: draft so the form is
+     functional as-is; swap for a real endpoint (Formspree, API route, …)
+     when you have one.                                              */
+  var form = document.getElementById("contactForm");
+  var note = document.getElementById("formNote");
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+
+    var data    = new FormData(form);
+    var subject = data.get("subject") || "Website enquiry";
+    var body    = "Name: "  + data.get("name")
+                + "\nEmail: " + data.get("email")
+                + "\n\n"      + data.get("message");
+
+    note.hidden = false;
+    window.location.href = "mailto:info@oplinx-solutions.com"
+      + "?subject=" + encodeURIComponent(subject)
+      + "&body="    + encodeURIComponent(body);
+    setTimeout(function(){ note.hidden = true; }, 4000);
+  });
+})();
+</script>
+</body>
+</html>
