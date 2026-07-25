@@ -122,6 +122,73 @@ html[dir="rtl"] .eyebrow{ letter-spacing:.04em; text-transform:none; }
 @media (prefers-reduced-motion:reduce){ .reveal{ opacity:1; transform:none; transition:none; } }
 
 /* ==========================================================================
+   1b. Preloader — shown once per browsing session.
+   The inline <head> script decides: it sets html.preload only on the session's
+   first paint, so returning views never flash the overlay. Everything here is
+   inert unless that class is present, which also keeps the no-JS path clean.
+   ========================================================================== */
+html:not(.preload) #preloader{ display:none; }
+html.preload{ overflow:hidden; }
+
+#preloader{
+  position:fixed; inset:0; z-index:200; display:grid; place-items:center;
+  background:radial-gradient(55rem 38rem at 50% 38%, var(--navy-mid) 0%, var(--navy) 48%, var(--navy-deep) 100%);
+  animation:preOut .7s var(--ease) 1.55s forwards;
+  will-change:clip-path;
+}
+.pre__stack{
+  display:grid; justify-items:center; gap:1.4rem;
+  animation:preStackOut .55s var(--ease) 1.45s forwards;
+}
+
+/* The mark is the logo chevron redrawn as strokes so it can draw itself on. */
+.pre__mark{ width:clamp(3.6rem,9vw,5rem); height:auto; overflow:visible; }
+.pre__mark path{
+  fill:none; stroke:#fff; stroke-width:11; stroke-linecap:round; stroke-linejoin:round;
+  stroke-dasharray:100; stroke-dashoffset:100;
+  animation:preDraw .85s var(--ease) forwards;
+}
+.pre__mark .pre__stem{ animation-duration:.6s; animation-delay:.42s; }
+.pre__halo{
+  fill:none; stroke:#fff; stroke-width:1.5; stroke-opacity:0;
+  transform-box:fill-box; transform-origin:center;
+  animation:preHalo .9s var(--ease) .55s 2;
+}
+
+.pre__word{ display:grid; justify-items:center; gap:.42rem; }
+.pre__name{
+  color:#fff; font-weight:800; font-size:clamp(1rem,2.6vw,1.35rem); line-height:1;
+  letter-spacing:.2em; opacity:0; animation:preName .85s var(--ease) .58s forwards;
+}
+.pre__sub{
+  color:var(--stone); font-weight:700; font-size:.5rem; line-height:1;
+  letter-spacing:.36em; opacity:0; animation:preSub .6s var(--ease) .92s forwards;
+}
+html[dir="rtl"] .pre__sub{ letter-spacing:.08em; }
+
+.pre__bar{
+  position:relative; width:clamp(6rem,16vw,9rem); height:2px; border-radius:2px;
+  background:rgba(255,255,255,.16); overflow:hidden;
+}
+.pre__bar i{
+  position:absolute; inset:0; border-radius:inherit;
+  background:linear-gradient(90deg, rgba(255,255,255,.45), #fff);
+  transform:scaleX(0); transform-origin:left; animation:preBar 1.35s var(--ease) .18s forwards;
+}
+html[dir="rtl"] .pre__bar i{ transform-origin:right; }
+
+@keyframes preDraw{ to{ stroke-dashoffset:0; } }
+@keyframes preHalo{
+  0%  { stroke-opacity:.32; transform:scale(.62); }
+  100%{ stroke-opacity:0;   transform:scale(1.75); }
+}
+@keyframes preName{ from{ opacity:0; letter-spacing:.55em; } to{ opacity:1; letter-spacing:.2em; } }
+@keyframes preSub{ from{ opacity:0; transform:translateY(6px); } to{ opacity:.8; transform:none; } }
+@keyframes preBar{ to{ transform:scaleX(1); } }
+@keyframes preStackOut{ to{ opacity:0; transform:translateY(-20px); } }
+@keyframes preOut{ from{ clip-path:inset(0 0 0 0); } to{ clip-path:inset(0 0 100% 0); visibility:hidden; } }
+
+/* ==========================================================================
    2. Navigation
    ========================================================================== */
 .nav{
@@ -133,7 +200,10 @@ html[dir="rtl"] .eyebrow{ letter-spacing:.04em; text-transform:none; }
 .nav__inner{ display:flex; align-items:center; justify-content:space-between; gap:1rem; width:var(--shell); margin-inline:auto; }
 
 .logo{ display:inline-flex; align-items:center; gap:.65rem; }
-.logo__mark{ width:2rem; height:auto; flex:none; }
+.logo__mark{ width:2rem; height:auto; flex:none; transition:transform .45s var(--ease); }
+.logo:hover .logo__mark{ transform:translateY(-2px) scale(1.07); }
+html.ready .nav .logo{ animation:logoIn .8s var(--ease) .12s both; }
+@keyframes logoIn{ from{ opacity:0; transform:translateY(-12px); } to{ opacity:1; transform:none; } }
 .logo__text{ font-weight:800; font-size:1.1rem; letter-spacing:.13em; color:var(--navy); line-height:1; }
 .logo__text small{ display:block; font-size:.48rem; letter-spacing:.36em; color:var(--body); font-weight:700; margin-top:.3rem; }
 html[dir="rtl"] .logo__text{ letter-spacing:.05em; }
@@ -199,6 +269,74 @@ html[dir="rtl"] .logo__text small{ letter-spacing:.06em; }
 html[dir="rtl"] .hero__art{ transform:scaleX(-1); }
 @media (max-width:860px){ .hero__art{ inset-inline-end:-26%; width:110%; opacity:.35; } }
 
+/* --- Hero artwork motion -------------------------------------------------
+   Two layers: a one-off entrance (the chevrons draw themselves on) and an
+   ambient loop that keeps the mark breathing afterwards. Resting states are
+   scoped to html.js so the artwork renders complete when scripting is off,
+   and the entrance fires on html.ready — immediately for returning views,
+   or as the preloader curtain lifts on the session's first view.
+   Nesting keeps one transform per element: parallax > drift > breathe. */
+html.js .hero__art .art__chev,
+html.js .hero__art .art__mark{ stroke-dashoffset:100; }
+html.js .hero__art .art__glow,
+html.js .hero__art .art__core{ opacity:0; }
+html.js .hero__art .art__base{ transform:scaleX(0); }
+
+.hero__art .art__parallax{
+  transform:translate3d(var(--art-x, 0px), var(--art-y, 0px), 0);
+  transition:transform .6s var(--ease);
+}
+/* The whole artwork is mirrored in RTL, so undo the flip on the pointer offset. */
+html[dir="rtl"] .hero__art .art__parallax{
+  transform:translate3d(calc(var(--art-x, 0px) * -1), var(--art-y, 0px), 0);
+}
+.hero__art .art__chev,
+.hero__art .art__mark{ stroke-dasharray:100; }
+
+.hero__art .art__chev--1{ stroke-opacity:.16; }
+.hero__art .art__chev--2{ stroke-opacity:.22; }
+.hero__art .art__chev--3{ stroke-opacity:.3; }
+
+.hero__art .art__base{ transform-box:view-box; transform-origin:420px 700px; }
+.hero__art .art__ripple{
+  stroke-opacity:0; transform-box:fill-box; transform-origin:center;
+}
+.hero__art .art__breathe{ transform-box:fill-box; transform-origin:center; }
+
+html.ready .hero__art .art__glow{ animation:artFadeIn 1.3s var(--ease) both; }
+html.ready .hero__art .art__chev--1{ animation:artDraw 1.1s var(--ease) .1s both; }
+html.ready .hero__art .art__chev--2{ animation:artDraw 1.1s var(--ease) .26s both; }
+html.ready .hero__art .art__chev--3{ animation:artDraw 1.1s var(--ease) .42s both; }
+html.ready .hero__art .art__mark{ animation:artDraw .8s var(--ease) .72s both; }
+html.ready .hero__art .art__core{ animation:artFadeIn 1s var(--ease) .6s both; }
+html.ready .hero__art .art__base{ animation:artBase 1.1s var(--ease) .3s both; }
+
+html.ready .hero__art .art__drift{ animation:artDrift 11s ease-in-out 1.6s infinite alternate; }
+html.ready .hero__art .art__breathe{ animation:artBreathe 7s ease-in-out 1.6s infinite alternate; }
+html.ready .hero__art .art__ripple{ animation:artRipple 6s var(--ease) 2s infinite; }
+html.ready .hero__art .art__ripple--2{ animation-delay:5s; }
+
+@keyframes artDraw{ to{ stroke-dashoffset:0; } }
+@keyframes artFadeIn{ from{ opacity:0; } to{ opacity:1; } }
+@keyframes artBase{ to{ transform:scaleX(1); } }
+@keyframes artDrift{ from{ transform:translateY(0); } to{ transform:translateY(-14px); } }
+@keyframes artBreathe{ from{ transform:scale(1); } to{ transform:scale(1.05); } }
+@keyframes artRipple{
+  0%  { stroke-opacity:.22; transform:scale(1); }
+  70% { stroke-opacity:0;   transform:scale(2.1); }
+  100%{ stroke-opacity:0;   transform:scale(2.1); }
+}
+
+@media (prefers-reduced-motion:reduce){
+  html.js .hero__art *{ animation:none !important; transition:none !important; }
+  html.js .hero__art .art__chev,
+  html.js .hero__art .art__mark{ stroke-dashoffset:0; }
+  html.js .hero__art .art__glow,
+  html.js .hero__art .art__core{ opacity:1; }
+  html.js .hero__art .art__base{ transform:none; }
+  html.js .hero__art .art__ripple{ display:none; }
+}
+
 .hero__body{ position:relative; z-index:1; text-align:start; padding-inline-start:var(--hero-indent); }
 .hero__eyebrow{ margin-bottom:1.5rem; }
 #hero h1{ margin-bottom:1.4rem; max-width:16ch; }
@@ -207,6 +345,18 @@ html[dir="rtl"] .hero__art{ transform:scaleX(-1); }
 @media (min-width:1000px){
   #hero h1{ max-width:min(16ch, 60%); }
   .hero__sub{ max-width:min(52ch, 47%); }
+}
+
+/* Hero copy rises in behind the lifting preloader curtain. */
+html.js .hero__body > *{ opacity:0; }
+html.ready .hero__body > *{ animation:heroRise .85s var(--ease) both; }
+html.ready .hero__eyebrow{ animation-delay:.12s; }
+html.ready #hero h1{ animation-delay:.22s; }
+html.ready .hero__sub{ animation-delay:.34s; }
+html.ready #hero .cta-row{ animation-delay:.46s; }
+@keyframes heroRise{ from{ opacity:0; transform:translateY(22px); } to{ opacity:1; transform:none; } }
+@media (prefers-reduced-motion:reduce){
+  html.js .hero__body > *{ opacity:1; animation:none !important; }
 }
 
 .cta-row{ display:flex; flex-wrap:wrap; gap:.85rem; }
@@ -415,6 +565,20 @@ footer{ background:var(--stone-50); padding-block:clamp(3rem,6vw,4.5rem) 0; colo
 .credit a:hover b{ color:var(--accent); text-decoration:underline; text-underline-offset:3px; }
 </style>
 
+<!-- Runs before first paint so the preloader is decided without a flash:
+     html.preload = show it, html.ready = skip straight to the entrance. -->
+<script>
+(function(){
+  var h = document.documentElement, reduce = false, seen = false;
+  h.className += " js";
+  try { reduce = matchMedia("(prefers-reduced-motion:reduce)").matches; } catch(e){}
+  try { seen = sessionStorage.getItem("oplinx-preloaded") === "1"; } catch(e){}
+  if (seen || reduce){ h.className += " ready"; return; }
+  h.className += " preload";
+  try { sessionStorage.setItem("oplinx-preloaded", "1"); } catch(e){}
+})();
+</script>
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -459,6 +623,22 @@ footer{ background:var(--stone-50); padding-block:clamp(3rem,6vw,4.5rem) 0; colo
 
 <body>
 
+<!-- ======================= PRELOADER ======================= -->
+<div id="preloader" role="presentation">
+  <div class="pre__stack">
+    <svg class="pre__mark" viewBox="0 0 100 100" aria-hidden="true">
+      <circle class="pre__halo" cx="50" cy="54" r="30"/>
+      <path class="pre__chevron" pathLength="100" d="M22 62 L50 34 L78 62"/>
+      <path class="pre__stem" pathLength="100" d="M50 78 V48"/>
+    </svg>
+    <div class="pre__word" aria-hidden="true">
+      <span class="pre__name">OPLINX</span>
+      <span class="pre__sub" data-en="SOLUTIONS" data-ar="للحلول الذكية">SOLUTIONS</span>
+    </div>
+    <span class="pre__bar" aria-hidden="true"><i></i></span>
+  </div>
+</div>
+
 <!-- ======================= NAV ======================= -->
 <header class="nav" id="nav">
   <div class="nav__inner">
@@ -500,14 +680,27 @@ footer{ background:var(--stone-50); padding-block:clamp(3rem,6vw,4.5rem) 0; colo
         <stop offset="100%" stop-color="#002349" stop-opacity="0"/>
       </linearGradient>
     </defs>
-    <!-- Chevrons echoing the logo mark -->
-    <circle cx="420" cy="340" r="285" fill="url(#gA)"/>
-    <path d="M180 470 L420 230 L660 470" stroke="#002349" stroke-opacity=".16" stroke-width="2" fill="none" stroke-linejoin="round"/>
-    <path d="M240 520 L420 340 L600 520" stroke="#002349" stroke-opacity=".22" stroke-width="2" fill="none" stroke-linejoin="round"/>
-    <path d="M300 570 L420 450 L540 570" stroke="#002349" stroke-opacity=".3"  stroke-width="2" fill="none" stroke-linejoin="round"/>
-    <path d="M355 620 L420 555 L485 620 M420 660 V572" stroke="#002349" stroke-opacity=".45" stroke-width="7" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
-    <circle cx="420" cy="340" r="150" fill="url(#gB)"/>
-    <path d="M120 700h600" stroke="#002349" stroke-opacity=".12" stroke-width="1.5"/>
+    <!-- Chevrons echoing the logo mark. Groups exist for the motion layers
+         (see "Hero artwork motion" in the stylesheet), not for grouping. -->
+    <g class="art__parallax">
+      <circle class="art__glow" cx="420" cy="340" r="285" fill="url(#gA)"/>
+
+      <g class="art__drift">
+        <circle class="art__ripple" cx="420" cy="340" r="150" fill="none" stroke="#002349" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <circle class="art__ripple art__ripple--2" cx="420" cy="340" r="150" fill="none" stroke="#002349" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+
+        <path class="art__chev art__chev--1" pathLength="100" d="M180 470 L420 230 L660 470" stroke="#002349" stroke-width="2" fill="none" stroke-linejoin="round"/>
+        <path class="art__chev art__chev--2" pathLength="100" d="M240 520 L420 340 L600 520" stroke="#002349" stroke-width="2" fill="none" stroke-linejoin="round"/>
+        <path class="art__chev art__chev--3" pathLength="100" d="M300 570 L420 450 L540 570" stroke="#002349" stroke-width="2" fill="none" stroke-linejoin="round"/>
+        <path class="art__mark" pathLength="100" d="M355 620 L420 555 L485 620 M420 660 V572" stroke="#002349" stroke-opacity=".45" stroke-width="7" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+
+        <g class="art__breathe">
+          <circle class="art__core" cx="420" cy="340" r="150" fill="url(#gB)"/>
+        </g>
+      </g>
+
+      <path class="art__base" d="M120 700h600" stroke="#002349" stroke-opacity=".12" stroke-width="1.5"/>
+    </g>
   </svg>
 
   <div class="shell hero__body">
@@ -932,8 +1125,25 @@ footer{ background:var(--stone-50); padding-block:clamp(3rem,6vw,4.5rem) 0; colo
 (function(){
   "use strict";
 
+  var html = document.documentElement;
+
+  /* ---------- Preloader teardown ----------
+     The <head> script already decided whether this session gets the overlay.
+     Timings mirror the CSS: the curtain wipe starts at 1.55s and runs .7s, so
+     "ready" lands with the wipe (hero content rises in behind it) and the node
+     is dropped once it is offscreen. */
+  var pre = document.getElementById("preloader");
+  if (html.classList.contains("preload")){
+    setTimeout(function(){ html.classList.add("ready"); }, 1550);
+    setTimeout(function(){
+      html.classList.remove("preload");
+      if (pre && pre.parentNode) pre.parentNode.removeChild(pre);
+    }, 2350);
+  } else if (pre && pre.parentNode){
+    pre.parentNode.removeChild(pre);
+  }
+
   /* ---------- Language toggle (EN ⇄ AR + RTL) ---------- */
-  var html    = document.documentElement;
   var langBtn = document.getElementById("langBtn");
   var STORE   = "oplinx-lang";
 
@@ -1000,6 +1210,37 @@ footer{ background:var(--stone-50); padding-block:clamp(3rem,6vw,4.5rem) 0; colo
       el.style.transitionDelay = (i % 3) * 85 + "ms";
       io.observe(el);
     });
+  }
+
+  /* ---------- Hero artwork parallax ----------
+     Mouse-only nicety on top of the CSS drift: the artwork trails the cursor by
+     a few pixels. Written to custom properties so it never fights the keyframed
+     transforms on the groups inside. */
+  var art = document.querySelector(".hero__art");
+  var hero = document.getElementById("hero");
+  var fine = false;
+  try {
+    fine = matchMedia("(pointer:fine)").matches
+        && !matchMedia("(prefers-reduced-motion:reduce)").matches;
+  } catch(e){}
+
+  if (art && hero && fine){
+    var raf = 0, tx = 0, ty = 0;
+    var paint = function(){
+      raf = 0;
+      art.style.setProperty("--art-x", tx.toFixed(1) + "px");
+      art.style.setProperty("--art-y", ty.toFixed(1) + "px");
+    };
+    var queue = function(){ if (!raf) raf = requestAnimationFrame(paint); };
+
+    hero.addEventListener("pointermove", function(e){
+      var r = hero.getBoundingClientRect();
+      tx = ((e.clientX - r.left) / r.width  - .5) * -24;
+      ty = ((e.clientY - r.top)  / r.height - .5) * -16;
+      queue();
+    }, { passive:true });
+
+    hero.addEventListener("pointerleave", function(){ tx = ty = 0; queue(); });
   }
 
   /* ---------- Contact form ----------
