@@ -3,20 +3,32 @@
 
 # ── security headers ─────────────────────────────────────────────────
 # The site is a single self-contained page: no external scripts, styles,
-# fonts, or frames. Styles and behaviour live in one inline <style> and
-# one inline <script>, so style-src/script-src need 'unsafe-inline' —
-# everything else is locked to 'self'. img-src allows data: for the
-# inline SVG favicon and the base64 logo.
+# fonts, frames or XHR. Styles and behaviour live in one inline <style>
+# and three inline <script> blocks, each pinned by its SHA-256 hash so
+# script-src/style-src need no 'unsafe-inline' — an injected inline
+# script would not match a hash and would not run. img-src allows data:
+# for the inline SVG favicon.
+#
+# The hashes are generated from index.html. After editing anything inside
+# an inline <style> or <script>, re-run:
+#
+#     node tools/csp-hashes.mjs
+#
+# or the browser will block the block that changed and the page will
+# render unstyled and inert. `--check` fails without writing, for CI.
 
 [[headers]]
   for = "/*"
   [headers.values]
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'sha256-Kc7HAC/qm9VyTg+aneCRdlF3iXNToSp0y9zeABH17c0=' 'sha256-wjW66ij7do+e7pIhy14xmZLMhuEVvyZ1UjCPGQ0s1QI=' 'sha256-7i3ngtGAvacscEpfOAUj4KRzdh5iCpHpQa0phfpfkKA='; style-src 'self' 'sha256-oflw+ivwMxUSW1NuimU3o0upyGj5j+iTQV9uZXqAeK0='; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; manifest-src 'self'; media-src 'none'; worker-src 'none'; upgrade-insecure-requests"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Permissions-Policy = "accelerometer=(), autoplay=(), camera=(), display-capture=(), encrypted-media=(), fullscreen=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), publickey-credentials-get=(), screen-wake-lock=(), usb=(), xr-spatial-tracking=(), interest-cohort=()"
     Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    Cross-Origin-Opener-Policy = "same-origin"
+    Cross-Origin-Resource-Policy = "same-origin"
+    X-Permitted-Cross-Domain-Policies = "none"
 
 # ── caching ──────────────────────────────────────────────────────────
 # Netlify defaults to max-age=0, must-revalidate. The page itself is
@@ -32,3 +44,25 @@
   for = "/og-image.jpg"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# Explicit rather than inherited, so a Netlify default change cannot start
+# caching stale copy at the edge or in visitors' browsers.
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/sitemap.xml"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/robots.txt"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"

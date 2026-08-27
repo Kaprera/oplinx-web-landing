@@ -1,8 +1,8 @@
 # OPLINX SOLUTIONS — website
 
-Single-file static site. `index.html` is the whole thing: inline CSS and JS, no
-build step, no external requests (system font stacks, inline SVG graphics), so
-it works offline and deploys by copying one file.
+Static site, no build step. `index.html` carries all the CSS and JS inline and
+pulls in exactly one sub-resource (`logo.png`); everything else is system font
+stacks and inline SVG, so there are no third-party requests at all.
 
 Design language referenced from utility.sa.
 
@@ -35,7 +35,7 @@ All copy comes from the OPLINX portfolio deck (`portfolio.pdf`): about, mission,
 vision, core values, the four service practices, industries served, founder's
 insight, success stories, and the "why choose" points. Contact details, brand
 navy (`#002349`), warm stone (`#E4DEDE`), and the logo mark are all taken from
-the same deck — the logo is an inline base64 PNG extracted from page 2.
+the same deck — the logo mark (`logo.png`) was extracted from page 2.
 
 Nothing on the page is invented.
 
@@ -53,12 +53,45 @@ practices. Supporting files: `robots.txt`, `sitemap.xml`, `og-image.jpg`
 Change them in `index.html` (canonical, `og:url`, `og:image`, `twitter:image`,
 and the JSON-LD `url`/`logo`/`image`), plus `robots.txt` and `sitemap.xml`.
 
+## Security headers
+
+`netlify.toml` sets HSTS, CSP, `X-Content-Type-Options`, `X-Frame-Options`,
+`Referrer-Policy`, `Permissions-Policy`, COOP and CORP. (No COEP — it buys
+nothing without SharedArrayBuffer, and CSP already blocks every cross-origin
+load.) The CSP carries **no
+`'unsafe-inline'`**: the one inline `<style>` and the three inline `<script>`
+blocks are each pinned by SHA-256 hash instead, so an injected inline script
+would not match a hash and would not run.
+
+That means the policy has to be kept in step with the markup by hand. **After
+editing anything inside an inline `<style>` or `<script>`, run:**
+
+```sh
+node tools/csp-hashes.mjs
+```
+
+Skip it and the browser blocks whichever block changed — the page renders
+unstyled and inert. `node tools/csp-hashes.mjs --check` fails without writing,
+which is the form to put in CI or a pre-commit hook. The same script refuses to
+run if a `style="…"` attribute has crept into the markup, since hashes cannot
+cover those.
+
 ## Lighthouse
 
 100 / 100 / 100 / 100 (performance, accessibility, best practices, SEO) on both
-the mobile and desktop presets. Mobile LCP 1.0s, CLS 0, TBT 0ms.
+the mobile and desktop presets. Mobile FCP 0.9s, LCP 1.0s, TBT 0ms, CLS 0,
+Speed Index 2.1s. HTML validates with 0 errors on the W3C Nu checker; the CSS
+validates with 0 errors on Jigsaw.
 
-Two weight-0 diagnostics — "document request latency" and "minify CSS" — are
-artifacts of serving over `python -m http.server`, which sends no
-`Content-Encoding`. **Serve with gzip or brotli enabled** and both clear; the
-page compresses from 71KB to 18.5KB. Verified against a gzip-enabled server.
+Measure against a server that sends `Content-Encoding` — `python -m
+http.server` does not, which shows up as phantom "document request latency" and
+"minify CSS" diagnostics. Netlify serves brotli automatically; the page goes
+out at ~15.7KB brotli / ~19.4KB gzip.
+
+## Deploying
+
+Netlify publishes the repo root (`publish = "."`), and a git-linked deploy ships
+only what is committed — `portfolio.pdf` and `.DS_Store` are in `.gitignore` and
+stay out. A **manual `netlify deploy` from this directory does not read
+`.gitignore`** and would upload the 182MB source deck to a public URL. Deploy
+from git, or move `portfolio.pdf` outside the folder first.
