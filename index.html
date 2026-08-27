@@ -4,7 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>OPLINX SOLUTIONS — Consultancy and Smart Solutions</title>
-<meta name="description" content="OPLINX Consultancy and Smart Solutions — expert consulting and digital transformation for businesses across the MENA region. Founded in Beirut, Lebanon.">
+<meta name="description" content="OPLINX Consultancy and Smart Solutions — expert consulting and digital transformation for businesses across the MENA region. Founded in Beirut, Lebanon."
+      data-en="OPLINX Consultancy and Smart Solutions — expert consulting and digital transformation for businesses across the MENA region. Founded in Beirut, Lebanon."
+      data-ar="أوبلينكس للاستشارات والحلول الذكية — استشارات متخصصة وتحوّل رقمي للشركات في منطقة الشرق الأوسط وشمال أفريقيا. تأسست في بيروت، لبنان.">
 
 <!-- SEO. Update the four absolute URLs below if the site ships on another domain. -->
 <link rel="canonical" href="https://oplinx-solutions.com/">
@@ -29,6 +31,7 @@
 <meta name="twitter:description" content="Expert consulting and digital transformation that turn complex challenges into actionable strategies and scalable results. Founded in Beirut, Lebanon.">
 <meta name="twitter:image" content="https://oplinx-solutions.com/og-image.jpg">
 
+<link rel="preload" as="image" href="logo.png" fetchpriority="high">
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Crect%20width='100'%20height='100'%20rx='18'%20fill='%23002349'/%3E%3Cpath%20d='M22%2062%20L50%2034%20L78%2062'%20fill='none'%20stroke='%23fff'%20stroke-width='11'%20stroke-linejoin='round'%20stroke-linecap='round'/%3E%3Cpath%20d='M50%2078%20V48'%20stroke='%23fff'%20stroke-width='11'%20stroke-linecap='round'/%3E%3C/svg%3E">
 
 <style>
@@ -62,7 +65,7 @@
 html[dir="rtl"]{ --font:var(--font-arabic); }
 
 *,*::before,*::after{ box-sizing:border-box; }
-html{ scroll-behavior:smooth; scroll-padding-top:var(--nav-h); }
+html{ scroll-behavior:smooth; scroll-padding-top:var(--nav-h); scrollbar-gutter:stable; }
 @media (prefers-reduced-motion:reduce){ html{ scroll-behavior:auto; } }
 
 body{
@@ -90,6 +93,22 @@ button{ font:inherit; color:inherit; }
 .sr-only{
   position:absolute; width:1px; height:1px; margin:-1px; padding:0;
   overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0;
+}
+
+/* Keyboard skip link — off-screen until focused, then parked over the nav. */
+.skip{
+  position:fixed; z-index:300; inset-block-start:.6rem; inset-inline-start:.6rem;
+  transform:translateY(-160%); background:var(--navy); color:#fff;
+  padding:.7rem 1.1rem; border-radius:var(--radius); font-weight:700; font-size:.9rem;
+  transition:transform .2s var(--ease);
+}
+.skip:focus{ transform:none; }
+#main:focus{ outline:none; }
+
+/* Zero-size marker 40px down the page; the nav watches it instead of scrollY. */
+#navSentinel{
+  position:absolute; top:40px; inset-inline-start:0;
+  width:1px; height:1px; pointer-events:none;
 }
 
 /* Type scale */
@@ -133,12 +152,12 @@ html.preload{ overflow:hidden; }
 #preloader{
   position:fixed; inset:0; z-index:200; display:grid; place-items:center;
   background:radial-gradient(55rem 38rem at 50% 38%, var(--navy-mid) 0%, var(--navy) 48%, var(--navy-deep) 100%);
-  animation:preOut .7s var(--ease) 1.55s forwards;
+  animation:preOut .4s var(--ease) .88s forwards;
   will-change:clip-path;
 }
 .pre__stack{
   display:grid; justify-items:center; gap:1.4rem;
-  animation:preStackOut .55s var(--ease) 1.45s forwards;
+  animation:preStackOut .32s var(--ease) .82s forwards;
 }
 
 /* The mark is the logo chevron redrawn as strokes so it can draw itself on. */
@@ -146,23 +165,23 @@ html.preload{ overflow:hidden; }
 .pre__mark path{
   fill:none; stroke:#fff; stroke-width:11; stroke-linecap:round; stroke-linejoin:round;
   stroke-dasharray:100; stroke-dashoffset:100;
-  animation:preDraw .85s var(--ease) forwards;
+  animation:preDraw .5s var(--ease) forwards;
 }
-.pre__mark .pre__stem{ animation-duration:.6s; animation-delay:.42s; }
+.pre__mark .pre__stem{ animation-duration:.35s; animation-delay:.24s; }
 .pre__halo{
   fill:none; stroke:#fff; stroke-width:1.5; stroke-opacity:0;
   transform-box:fill-box; transform-origin:center;
-  animation:preHalo .9s var(--ease) .55s 2;
+  animation:preHalo .5s var(--ease) .3s 2;
 }
 
 .pre__word{ display:grid; justify-items:center; gap:.42rem; }
 .pre__name{
   color:#fff; font-weight:800; font-size:clamp(1rem,2.6vw,1.35rem); line-height:1;
-  letter-spacing:.2em; opacity:0; animation:preName .85s var(--ease) .58s forwards;
+  letter-spacing:.2em; opacity:0; animation:preName .5s var(--ease) .33s forwards;
 }
 .pre__sub{
   color:var(--stone); font-weight:700; font-size:.5rem; line-height:1;
-  letter-spacing:.36em; opacity:0; animation:preSub .6s var(--ease) .92s forwards;
+  letter-spacing:.36em; opacity:0; animation:preSub .35s var(--ease) .5s forwards;
 }
 html[dir="rtl"] .pre__sub{ letter-spacing:.08em; }
 
@@ -173,7 +192,7 @@ html[dir="rtl"] .pre__sub{ letter-spacing:.08em; }
 .pre__bar i{
   position:absolute; inset:0; border-radius:inherit;
   background:linear-gradient(90deg, rgba(255,255,255,.45), #fff);
-  transform:scaleX(0); transform-origin:left; animation:preBar 1.35s var(--ease) .18s forwards;
+  transform:scaleX(0); transform-origin:left; animation:preBar .78s var(--ease) .1s forwards;
 }
 html[dir="rtl"] .pre__bar i{ transform-origin:right; }
 
@@ -459,6 +478,8 @@ html[dir="rtl"] .industry:hover{ transform:translateX(-4px); }
   position:relative; padding-inline-start:1.6rem;
   border-inline-start:3px solid var(--navy); font-size:clamp(1rem,1.4vw,1.16rem); line-height:1.8;
 }
+.quote--spaced{ margin-top:2.2rem; }
+.stories__h{ margin-bottom:1.5rem; }
 .stories{ display:grid; gap:.9rem; }
 .story{
   display:flex; gap:1rem; background:var(--stone-25); border:1px solid var(--line);
@@ -497,11 +518,13 @@ html[dir="rtl"] .industry:hover{ transform:translateX(-4px); }
   font-size:.98rem;
 }
 .cta__sign img{ width:1.6rem; height:auto; }
+.cta__logo{ filter:brightness(0) invert(1); }
 .cta__sign b{ color:#fff; letter-spacing:.1em; }
 
 /* ==========================================================================
    10. Contact
    ========================================================================== */
+.contact__intro{ margin-top:1.4rem; }
 .contact__grid{ display:grid; gap:clamp(2.4rem,5vw,4.5rem); grid-template-columns:1fr; }
 @media (min-width:960px){ .contact__grid{ grid-template-columns:1fr 1fr; align-items:start; } }
 .contact__list{ display:grid; gap:1.5rem; margin-top:2.4rem; }
@@ -545,6 +568,7 @@ footer{ background:var(--stone-50); padding-block:clamp(3rem,6vw,4.5rem) 0; colo
 .foot__rule{ width:2.4rem; height:2px; background:var(--navy); margin-bottom:1.1rem; }
 .foot ul{ display:grid; gap:.65rem; font-size:.93rem; overflow-wrap:anywhere; }
 .foot a:hover{ color:var(--accent); }
+.tel{ display:inline-block; }
 .foot__tag{ font-size:.93rem; max-width:40ch; margin-top:1rem; }
 
 .social{ display:flex; gap:.6rem; margin-top:1.4rem; }
@@ -623,6 +647,11 @@ footer{ background:var(--stone-50); padding-block:clamp(3rem,6vw,4.5rem) 0; colo
 
 <body>
 
+<a class="skip" href="#main" data-en="Skip to content" data-ar="تخطّي إلى المحتوى">Skip to content</a>
+
+<!-- Trigger point for the sticky-nav background; see "Sticky nav" in the script. -->
+<div id="navSentinel" aria-hidden="true"></div>
+
 <!-- ======================= PRELOADER ======================= -->
 <div id="preloader" role="presentation">
   <div class="pre__stack">
@@ -643,7 +672,7 @@ footer{ background:var(--stone-50); padding-block:clamp(3rem,6vw,4.5rem) 0; colo
 <header class="nav" id="nav">
   <div class="nav__inner">
     <a class="logo" href="#hero">
-      <img class="logo__mark" src="data:image/png;base64,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" alt="" width="110" height="128">
+      <img class="logo__mark" src="logo.png" alt="" width="110" height="128">
       <span class="logo__text" aria-hidden="true">OPLINX<small data-en="SOLUTIONS" data-ar="للحلول الذكية">SOLUTIONS</small></span>
       <span class="sr-only" data-en="OPLINX SOLUTIONS — home" data-ar="أوبلينكس للحلول الذكية — الرئيسية">OPLINX SOLUTIONS — home</span>
     </a>
@@ -665,7 +694,7 @@ footer{ background:var(--stone-50); padding-block:clamp(3rem,6vw,4.5rem) 0; colo
   </div>
 </header>
 
-<main>
+<main id="main" tabindex="-1">
 
 <!-- ======================= HERO ======================= -->
 <section id="hero">
@@ -900,7 +929,7 @@ footer{ background:var(--stone-50); padding-block:clamp(3rem,6vw,4.5rem) 0; colo
   <div class="shell founder__grid">
     <div class="reveal">
       <h2 class="t-h2 underlined" data-en="Founder's Insight" data-ar="رؤية المؤسس">Founder's Insight</h2>
-      <p class="quote" style="margin-top:2.2rem;"
+      <p class="quote quote--spaced"
          data-en="Our founder brings years of real-world experience in automotive operations, internal auditing, service performance, and leadership. Having worked with premium brands like Land Rover and Aston Martin, he offers unique insight into high-performance environments and efficient management structures."
          data-ar="يمتلك مؤسسنا سنوات من الخبرة العملية في عمليات السيارات والتدقيق الداخلي وأداء الخدمة والقيادة. وبعد عمله مع علامات فاخرة مثل لاند روفر وأستون مارتن، يقدّم رؤية فريدة لبيئات الأداء العالي وهياكل الإدارة الفعّالة.">
         Our founder brings years of real-world experience in automotive operations, internal auditing, service performance, and leadership. Having worked with premium brands like Land Rover and Aston Martin, he offers unique insight into high-performance environments and efficient management structures.
@@ -908,7 +937,7 @@ footer{ background:var(--stone-50); padding-block:clamp(3rem,6vw,4.5rem) 0; colo
     </div>
 
     <div class="reveal">
-      <h3 class="t-h3" style="margin-bottom:1.5rem;" data-en="Selected Success Stories" data-ar="قصص نجاح مختارة">Selected Success Stories</h3>
+      <h3 class="t-h3 stories__h" data-en="Selected Success Stories" data-ar="قصص نجاح مختارة">Selected Success Stories</h3>
       <div class="stories">
         <div class="story">
           <span class="story__n" aria-hidden="true">01</span>
@@ -972,7 +1001,7 @@ footer{ background:var(--stone-50); padding-block:clamp(3rem,6vw,4.5rem) 0; colo
       <a class="btn btn--light" href="#contact" data-en="Talk to us" data-ar="تحدّث إلينا">Talk to us</a>
     </div>
     <p class="cta__sign reveal">
-      <img src="data:image/png;base64,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" alt="" width="110" height="128" style="filter:brightness(0) invert(1);">
+      <img class="cta__logo" src="logo.png" alt="" width="110" height="128">
       <span data-en="At &lt;b&gt;OPLINX&lt;/b&gt; we bring clarity, action, and growth to every client journey."
             data-ar="في &lt;b&gt;أوبلينكس&lt;/b&gt; نجلب الوضوح والفعل والنمو إلى كل رحلة عميل.">At <b>OPLINX</b> we bring clarity, action, and growth to every client journey.</span>
     </p>
@@ -984,7 +1013,7 @@ footer{ background:var(--stone-50); padding-block:clamp(3rem,6vw,4.5rem) 0; colo
   <div class="shell contact__grid">
     <div class="reveal">
       <h2 class="t-h2 underlined" data-en="Contact Us" data-ar="تواصل معنا">Contact Us</h2>
-      <p class="t-lead" style="margin-top:1.4rem;"
+      <p class="t-lead contact__intro"
          data-en="Tell us what you're working on and we'll come back with a straight answer on how we can help."
          data-ar="أخبرنا بما تعمل عليه وسنعود إليك بإجابة واضحة حول الطريقة التي يمكننا أن نساعدك بها.">
         Tell us what you're working on and we'll come back with a straight answer on how we can help.
@@ -1065,7 +1094,7 @@ footer{ background:var(--stone-50); padding-block:clamp(3rem,6vw,4.5rem) 0; colo
     <div class="foot__grid">
       <div>
         <a class="logo" href="#hero">
-          <img class="logo__mark" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAG4AAACACAYAAADqFVwJAAAIsElEQVR42u2daW9VRRjH7yfpvYC0tOyCC2AXtgJRBCltoRYViSjBIgi+Ma6Jica3fgGjaDQYlChohargEkEaIxiQqOCKUdQIKLTAbZ3RGTL35i7nzPyfOTPnzov/K8I5Z87vPs8825xmMuOWZFOonFA2tUrhoiYwPcf0OdMrTNMCOPfVwLSXaVTRt6mElzJL6y+CJvUV0/QAzg9LK9b3qYKXgkU0Me2rAk3qa6YpAVzyGs+0IyI0qVNMUwO4ZKHtjAlNhTc9gLOvRqYBTWhSh7yG52kg0m8ITbW8yQGcnZD/fRA0NVWYEsAlk6eZ6qB3btMjaHuIoEmd8MryPCgWc2jvEEPzL9r0ILl+1xI0qe+8gOd49DhgGZq6500N4OKrnml7QtCkTjq95zmaXCcNzf2uQnCPkfe8ugCufMi/zzFoUmeZZgdwpQvGyOR6hOl1MLzfmFoDuEJLQ4f8veLaveDrXnQGngPQBsCW1lV0j7vA8H5hmlPL4BoJLa1Y6wjgNdciOG5pH4BfZk+VWcp7wff7PVF4CUF7Feweb4947/vA8P5maqsFcBzaG2BovUpBulKxmsry/kokVfB4T+PQOjWf5R4wvH+sW56nVf4RsaeZPNMGMLwLTC1pAjchwrCqDjTEoY6NYHg/i1Qh5zu4BoI9rRv8jH1geOesuE1PprGooMnAZQNBqtDiIzh09DgK2NOqaT1BwDLfJ3A8EHkPbGmrLR2ERKcKdF0Fgir/ix64R5uWd4bEbYKnsfodC/l1tY4gVWh1EVwjOOTPC0tL8hz3WgK3Oc8lcPUElrbKkYYl2vLOwywPYGnoWf5uR6BliQIWnirclCQ4dOcauadNEQEBr2KMAcDrYBoGrvVX4yTdkQMYeeEeEXvaclG9kNfmUe4kwLVvYRoC73ltNsFRRI9dIEu7lelKiXscYZoIgLdARIjIaLPNBrgmcPQ4GqMJWk0rmC5VuM8eAc/0Pu1gt6kHL2btEQntikE/rRS0KJawW/z4TO+3SEx8od7F6dipQoyQfyeBe0TsacuYLse499sgeGi3Ga+rENE9vuRI57p4DGFZFfdYTgOgAx0LwZYnKyw5U3Ac2n6C2mMOEKKvMIzydoP2vAXgPY8PIM01AddAEPL3gJJiXUuj2vPQlne2KrwK0PZk3Kzy3yZ+BKhn2+UovAsVAxZLI3Q9EUbooghdwZB6UyTppvvuQtFARZ5VmBsFHDrkzwMLxqZ7WjXtB1leGxgen9ucWQncOIImKApauYoIWrtF4RxRYUG6zY+Yril4LuVmaxze02xAk3oLZHmLwfC2lrI4PnJwzEH3SLWnRdnzXEvSzxQ8k+KXUdCQBeOhBKCpljcRkLrMB1reo+K6dRLcMyBoHSBoS2OWsSg/mYH4ul47yPLOiaj/qsUdcKQJWif2tCEHoKG7CqiAZY4K7rCl82lRQv6LDkGT4h8lnQGINhcBLO8pFdwXCRWM1b1gueXoMa6Olcyn4mueYZ63SwX3Q4Ihf064x8sOQ0Of/TZJ0vnXjsZmxIvTTa7rQO5x2ANoUt+ALK/FwG3O0AGHqvLLkP+yR9DQbnOH5v1b4oJDjxvkPYSmuixTeLofm5sbB1weeGpmmWfusZyOM11n8B5eMAHHL/ClRUtb7mjIr6ufDM4E6I6EtEpwRy2E/BRV/j81/99rBIcYdY5S6X4o7gYJ7oiF1gw65B8UzU+d/zuLaQsY3ulMvG98dRj05+orWVweWBFBl7EGRaW8yahs9H+rBAnvRMQ9b7XB+9irJuBHCftp6JD/M6Xw22AIjmsbGN6PVdxmp+H1t0twY0r8o0lrRv3DsujBnkNF1frx2ntEYd3xYTC8P8pY3krYMbQS6YDpnpYjqogMXm1pFA426Vyr1IH6pwnc5vXKO+kEXXd6scXlFfeYA4T8SGgHy7RWdPe4cq7sSQJ4M0V/EZECPa92wHOirdMJnOXPg6FNrjBprZfAln9+NLyTwGt1qODGiF8EwtJQE8YqtKYKz6ULrq2Kq3/CwUT/5XJTXq6F/AeL9rRcmTPoSFep6jGHoPEvsE9DHt6XLxRdETkU8TSNLrioPbVnHQHXjjy8rwYiI2BoUWc8qMGhBqlMdDfy8D6VezwsYGSJwcX91khSbrMPeXifqjUTx9JsWpzUJmegGYBbCg75P9WcX9QFp/uBmI2WoN2PPLwf9esGOrVH3XFvE3C6qc8DxNC2IQ/vq62IS2D32GjgrpMAxwekHkkUWkxw6OT6AGBC2LarlJqUKfx6EUJbquSsWuAWgPe0T0oUjG2Ca87odzyuBZexRoX7JflAzeNg91gPqovaBJcVlfnjVqNHQ3DNwJOVjRlcmY0anPrjmiaq/UhoD2mvPcYCVgLcYxMQmkmROa7F8fLbqcQCEUBU2WUArSHW5uuOxbWCD+NzPWj8HjTzuDMxHnJ/EbSsR64SeZpUahNk7Qbj41Gh1RNBowbXIkbhqEL+RMBFGXz5UFhazkNwreCcFQsN0B0oNwDzMShPSwJcM+Ge5gw4uQ8UQ6u3AI0CHJ9FOQuGtpVk7aAL9SjucbIlaOh0oIXA0jaRrR14sQ5wck1pcbNLuMfzYGibSddu+UW7CI4iT9tKvnbPwem6ylkKNL8srcYt7kYxWznkJbQaBreZIE/baHXtNQpulMjScgGcP+D6Ell7AGe5cx3AJQ5ufaJrD+A8co8BnKNlrACOdMI4F8D5Ba7PqbUHcFU1LDr+WWesLYCLBO1mJ9cewFXUYmfXHsCV1Z1Orz2A8xBaAFdSd3ix9gCuQGu8WXuNdsBLqdertQdw/2mtUzlaABdJq71ce42D6/Z27TUMrsvrtdcouCWer9t7cDrfZO70HloKwMX5tO8VcTQsG8Alr7ExDtQvTg20FIDjWhWhNdOTKmgpAccT522pDPlTDo6Lf1e6+G8HXPQ+5K8BcHK/kx/B5idwFqYWWsrASbfJi8XzUg2N6V9ksq21IfH7awAAAABJRU5ErkJggg==" alt="" width="110" height="128">
+          <img class="logo__mark" src="logo.png" alt="" width="110" height="128">
           <span class="logo__text" aria-hidden="true">OPLINX<small data-en="SOLUTIONS" data-ar="للحلول الذكية">SOLUTIONS</small></span>
       <span class="sr-only" data-en="OPLINX SOLUTIONS — home" data-ar="أوبلينكس للحلول الذكية — الرئيسية">OPLINX SOLUTIONS — home</span>
         </a>
@@ -1104,7 +1133,7 @@ footer{ background:var(--stone-50); padding-block:clamp(3rem,6vw,4.5rem) 0; colo
         <h3 class="foot__h" data-en="Contact" data-ar="للتواصل">Contact</h3>
         <div class="foot__rule"></div>
         <ul>
-          <li><a href="tel:+96176021020" dir="ltr" style="display:inline-block">+961 76 021 020</a></li>
+          <li><a href="tel:+96176021020" dir="ltr" class="tel">+961 76 021 020</a></li>
           <li><a href="mailto:info@oplinx-solutions.com">info@oplinx-solutions.com</a></li>
           <li data-en="Beirut, Lebanon" data-ar="بيروت، لبنان">Beirut, Lebanon</li>
         </ul>
@@ -1129,22 +1158,23 @@ footer{ background:var(--stone-50); padding-block:clamp(3rem,6vw,4.5rem) 0; colo
 
   /* ---------- Preloader teardown ----------
      The <head> script already decided whether this session gets the overlay.
-     Timings mirror the CSS: the curtain wipe starts at 1.55s and runs .7s, so
+     Timings mirror the CSS: the curtain wipe starts at .88s and runs .4s, so
      "ready" lands with the wipe (hero content rises in behind it) and the node
      is dropped once it is offscreen. */
   var pre = document.getElementById("preloader");
   if (html.classList.contains("preload")){
-    setTimeout(function(){ html.classList.add("ready"); }, 1550);
+    setTimeout(function(){ html.classList.add("ready"); }, 880);
     setTimeout(function(){
       html.classList.remove("preload");
       if (pre && pre.parentNode) pre.parentNode.removeChild(pre);
-    }, 2350);
+    }, 1300);
   } else if (pre && pre.parentNode){
     pre.parentNode.removeChild(pre);
   }
 
   /* ---------- Language toggle (EN ⇄ AR + RTL) ---------- */
   var langBtn = document.getElementById("langBtn");
+  var desc    = document.querySelector('meta[name="description"]');
   var STORE   = "oplinx-lang";
 
   function applyLang(lang){
@@ -1153,16 +1183,20 @@ footer{ background:var(--stone-50); padding-block:clamp(3rem,6vw,4.5rem) 0; colo
     html.setAttribute("dir",  isAr ? "rtl" : "ltr");
     langBtn.textContent = isAr ? "English" : "العربية";
 
-    document.querySelectorAll("[data-en][data-ar]").forEach(function(el){
-      var val = el.getAttribute(isAr ? "data-ar" : "data-en");
+    var attr = isAr ? "data-ar" : "data-en";
+    document.querySelectorAll("body [data-en][data-ar]").forEach(function(el){
+      var val = el.getAttribute(attr);
       if (val === null) return;
-      // Some strings carry inline <span>/<b> emphasis, so write HTML not text.
-      el.innerHTML = val;
+      // Only a handful of strings carry inline <span>/<b> emphasis. The rest
+      // go through textContent, which skips the HTML parser entirely.
+      if (val.indexOf("<") === -1) el.textContent = val;
+      else el.innerHTML = val;
     });
 
     document.title = isAr
       ? "أوبلينكس للحلول الذكية — الاستشارات والحلول الذكية"
       : "OPLINX SOLUTIONS — Consultancy and Smart Solutions";
+    if (desc) desc.setAttribute("content", desc.getAttribute(attr));
     try { localStorage.setItem(STORE, lang); } catch(e){}
   }
 
@@ -1174,11 +1208,23 @@ footer{ background:var(--stone-50); padding-block:clamp(3rem,6vw,4.5rem) 0; colo
     applyLang(html.getAttribute("dir") === "rtl" ? "en" : "ar");
   });
 
-  /* ---------- Sticky nav background ---------- */
+  /* ---------- Sticky nav background ----------
+     A zero-height sentinel sits 40px down the page; the nav goes opaque once
+     it scrolls out of view. This is the same trigger point as reading
+     window.scrollY on every scroll event, without the forced layout. */
   var nav = document.getElementById("nav");
-  function onScroll(){ nav.classList.toggle("stuck", window.scrollY > 40); }
-  onScroll();
-  window.addEventListener("scroll", onScroll, { passive:true });
+  var sentinel = document.getElementById("navSentinel");
+  if ("IntersectionObserver" in window && sentinel){
+    new IntersectionObserver(function(entries){
+      nav.classList.toggle("stuck", !entries[0].isIntersecting);
+    }).observe(sentinel);
+  } else {
+    var stuck = null;
+    window.addEventListener("scroll", function(){
+      var now = window.scrollY > 40;
+      if (now !== stuck){ stuck = now; nav.classList.toggle("stuck", now); }
+    }, { passive:true });
+  }
 
   /* ---------- Mobile menu ---------- */
   var burger = document.getElementById("burger");
@@ -1202,12 +1248,13 @@ footer{ background:var(--stone-50); padding-block:clamp(3rem,6vw,4.5rem) 0; colo
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
         if (!entry.isIntersecting) return;
+        entry.target.style.transitionDelay = entry.target._d + "ms";
         entry.target.classList.add("in");
         io.unobserve(entry.target);
       });
     }, { threshold:0.1, rootMargin:"0px 0px -8% 0px" });
     items.forEach(function(el, i){
-      el.style.transitionDelay = (i % 3) * 85 + "ms";
+      el._d = (i % 3) * 85;
       io.observe(el);
     });
   }
