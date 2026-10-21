@@ -22,7 +22,7 @@
   [headers.values]
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'sha256-Kc7HAC/qm9VyTg+aneCRdlF3iXNToSp0y9zeABH17c0=' 'sha256-wjW66ij7do+e7pIhy14xmZLMhuEVvyZ1UjCPGQ0s1QI=' 'sha256-7i3ngtGAvacscEpfOAUj4KRzdh5iCpHpQa0phfpfkKA='; style-src 'self' 'sha256-oflw+ivwMxUSW1NuimU3o0upyGj5j+iTQV9uZXqAeK0='; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; manifest-src 'self'; media-src 'none'; worker-src 'none'; upgrade-insecure-requests"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'sha256-Kc7HAC/qm9VyTg+aneCRdlF3iXNToSp0y9zeABH17c0=' 'sha256-qZ5IuW1pmW9bp1u8TIq8VN+/UtF7UEAOt9ACoU2mWLY=' 'sha256-senS4+fbsFqRWYC1pwWxUoA5m6wgULjtVP9tvK/Hx6Y='; style-src 'self' 'sha256-oflw+ivwMxUSW1NuimU3o0upyGj5j+iTQV9uZXqAeK0='; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; manifest-src 'self'; media-src 'none'; worker-src 'none'; upgrade-insecure-requests"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "accelerometer=(), autoplay=(), camera=(), display-capture=(), encrypted-media=(), fullscreen=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), publickey-credentials-get=(), screen-wake-lock=(), usb=(), xr-spatial-tracking=(), interest-cohort=()"
     Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
